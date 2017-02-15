@@ -1,0 +1,10 @@
+/*.log
+/target
+/*-init.clj
+/resources/public/js/compiled
+./out/
+.lein-failures
+.lein-repl-history
+figwheel_server.log
+.nrepl-port
+max-puzzle.iml
