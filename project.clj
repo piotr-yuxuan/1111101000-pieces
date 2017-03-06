@@ -61,9 +61,9 @@
                                    :pretty-print false}}]}
   :aliases {"dist" ["do"
                     "clean,"
-                    "garden" "once,"
+                    "garden" "once" "min,"
                     "cljsbuild" "once" "min,"
                     "shell" "./release.sh"]
             "reload" ["pdo"
-                      "garden" "auto,"
+                      "garden" "auto" "dev,"
                       "figwheel" "dev,"]})
