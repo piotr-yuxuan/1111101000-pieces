@@ -16,6 +16,8 @@ Distributable files with be placed within `docs/` where GitHub pages look them f
 
 There are no such thing like version numbers but commit hashes are used to refer different versions.
 
+You can see them here: [https://github.com/piotr-yuxuan/1111101000-pieces/commits/master/docs](https://github.com/piotr-yuxuan/1111101000-pieces/commits/master/docs).
+
 ## Documentation
 
 Additional documentation will be written under `docs/doc` if ever.
