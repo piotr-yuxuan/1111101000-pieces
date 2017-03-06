@@ -21,7 +21,7 @@
   (let [el (.getElementById js/document id)
         turn-fn #(dispatch [:turn id])
         track-fn #(dispatch [:move id (goog.object/get % "movementX") (goog.object/get % "movementY")])
-        stop-fn #(do (println "stop") (.removeEventListener el "mousemove" track-fn))
+        stop-fn #(.removeEventListener el "mousemove" track-fn)
         dont-turn-when-moved-fn (fn introspection []
                                   (.removeEventListener el "mouseup" turn-fn)
                                   (.removeEventListener el "mousemove" introspection))]
