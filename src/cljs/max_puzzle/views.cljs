@@ -2,31 +2,26 @@
   (:require [re-frame.core :refer [dispatch subscribe]]
             [reagent.core :as reagent]))
 
-(defn- controlled-heckert
-  [id]
-  [:img {:id id
-         ;; disable html5 drag and drop
-         :draggable false
-         :src "img/bb4.jpg"
-         :style {:user-select :none
-                 :-moz-user-select :none
-                 :-webkit-user-select :none
-                 :-ms-user-select :none
-                 :user-drag :none
-                 :-moz-user-drag :none
-                 :-webkit-user-drag :none
-                 :-ms-user-drag :none
-                 :transform @(subscribe [:css-transform id])}}])
+(defn- controlled-fragment
+  [polygon-id]
+  [:img.draggable {:id polygon-id
+                   ;; disable html5 drag and drop
+                   :draggable false
+                   ;;:src "img/bb4.jpg"
+                   :src "img/monet.jpg"
+                   :style {:max-width "100%"
+                           :max-height "100%"
+                           :clip-path (str "polygon(" polygon-id ")")
+                           :transform @(subscribe [:css-transform polygon-id])}}])
 
 (defn- watch-for-motion!
   "Mouse usually gets out of the picture because OS sometimes likes smooth stuff which breaks all down.
-  I can be fix easily with a local state but I prefered to avoid this (I will submit later)
   It would be so very better if it would use a subscription on the element"
   [id]
   (let [el (.getElementById js/document id)
         turn-fn #(dispatch [:turn id])
         track-fn #(dispatch [:move id (goog.object/get % "movementX") (goog.object/get % "movementY")])
-        stop-fn #(.removeEventListener el "mousemove" track-fn)
+        stop-fn #(do (println "stop") (.removeEventListener el "mousemove" track-fn))
         dont-turn-when-moved-fn (fn introspection []
                                   (.removeEventListener el "mouseup" turn-fn)
                                   (.removeEventListener el "mousemove" introspection))]
@@ -41,10 +36,12 @@
     nil))
 
 (defn main-panel []
-  (let [id "picture"]
+  (let [piece1 "0 0, 0% 100%, 100% 100%"
+        piece2 "0 0, 100% 0, 100% 100%"]
     (reagent/create-class
-      {:component-did-mount #(watch-for-motion! id)
+      {:component-did-mount #(do (watch-for-motion! piece1)
+                                 (watch-for-motion! piece2))
        :reagent-render (fn []
-                         [:div {:style {:display :flex
-                                        :justify-content :center}}
-                          [controlled-heckert id]])})))
+                         [:div.fragments-container
+                          [controlled-fragment piece1]
+                          [controlled-fragment piece2]])})))
