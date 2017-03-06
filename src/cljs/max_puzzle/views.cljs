@@ -8,7 +8,7 @@
                    ;; disable html5 drag and drop
                    :draggable false
                    ;;:src "img/bb4.jpg"
-                   :src "img/monet.jpg"
+                   :src "img/titien.jpg"
                    :style {:max-width "100%"
                            :max-height "100%"
                            :clip-path (str "polygon(" polygon-id ")")
