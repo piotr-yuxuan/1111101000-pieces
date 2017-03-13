@@ -23,4 +23,4 @@
     (let [{:keys [rotate translateX translateY]} @(subscribe [:transform id])]
       (str "translateX(" translateX "px) "
            "translateY(" translateY "px) "
-           "rotate(" (* -1 (* 90 rotate)) "deg)"))))
+           "rotate(" (* -1 (* 45 rotate)) "deg)"))))

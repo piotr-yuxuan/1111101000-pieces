@@ -1,18 +1,19 @@
 (ns max-puzzle.views
-  (:require [re-frame.core :refer [dispatch subscribe]]
+  (:require [re-frame.core :refer [dispatch subscribe reg-event-ctx]]
             [reagent.core :as reagent]))
 
 (defn- controlled-fragment
-  [polygon-id]
-  [:img.draggable {:id polygon-id
+  [{:keys [path centre]}]
+  [:img.draggable {:id centre
                    ;; disable html5 drag and drop
                    :draggable false
                    ;;:src "img/bb4.jpg"
-                   :src "img/titien.jpg"
+                   :src "img/monet.jpg"
                    :style {:max-width "100%"
                            :max-height "100%"
-                           :clip-path (str "polygon(" polygon-id ")")
-                           :transform @(subscribe [:css-transform polygon-id])}}])
+                           :clip-path (str "polygon(" path ")")
+                           :-webkit-transform-origin centre
+                           :transform @(subscribe [:css-transform centre])}}])
 
 (defn- watch-for-motion!
   "Mouse usually gets out of the picture because OS sometimes likes smooth stuff which breaks all down.
@@ -35,13 +36,21 @@
     ;; makes obvious it returns nil
     nil))
 
+(def pieces
+  [{:path "  0%   0%,   0%  50%,  50%  50%,  50%   0%" :centre "25% 25%"}
+   {:path " 50%   0%,  50%  50%, 100%  50%, 100%   0%" :centre "75% 25%"}
+   {:path "  0%  50%,   0% 100%,  50% 100%,  50%  50%" :centre "25% 75%"}
+   {:path " 50%  50%,  50% 100%, 100% 100%, 100%  50%" :centre "75% 75%"}])
+
 (defn main-panel []
-  (let [piece1 "0 0, 0% 100%, 100% 100%"
-        piece2 "0 0, 100% 0, 100% 100%"]
-    (reagent/create-class
-      {:component-did-mount #(do (watch-for-motion! piece1)
-                                 (watch-for-motion! piece2))
-       :reagent-render (fn []
-                         [:div.fragments-container
-                          [controlled-fragment piece1]
-                          [controlled-fragment piece2]])})))
+  (reagent/create-class
+    {:component-did-mount #(doall (for [{:keys [centre]} pieces] (watch-for-motion! centre)))
+     :reagent-render (fn []
+                       [:div.fragments-container
+                        [:button {:on-click #(dispatch [:reset-transforms])
+                                  :style {:position :absolute
+                                          :top 15
+                                          :left 15}} "reset position"]
+                        (map (fn [{:keys [centre] :as piece}]
+                               ^{:key centre} [controlled-fragment piece])
+                             pieces)])}))

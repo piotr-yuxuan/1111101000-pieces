@@ -27,4 +27,9 @@
   (fn [db [_ id]]
     (update-in db [:transforms id :rotate]
                (fn [rotate]
-                 (mod (inc rotate) 4)))))
+                 (mod (inc rotate) 8)))))
+
+(re-frame/reg-event-db
+  :reset-transforms
+  (fn [db _]
+    (dissoc db :transforms)))

@@ -1,7 +1,7 @@
 (defproject max-puzzle "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
                  [org.clojure/clojurescript "1.9.495"]
-                 [reagent "0.6.0"]
+                 [reagent "0.6.1"]
                  [re-frame "0.9.2"]
                  [garden "1.3.2"]]
   :license {:name "GNU GPL v3+"
@@ -22,7 +22,7 @@
                                     "docs/favicon.ico"
                                     "docs/index.html"]
   :figwheel {:css-dirs ["resources/public/css"]
-             :server-port 3450
+             :server-port 3451
              :repl false}
   :garden {:builds [{:id "dev"
                      :source-paths ["src/clj"]
@@ -35,9 +35,9 @@
                      :compiler {:output-to "resources/public/css/screen.css"
                                 :pretty-print? false}}]}
   :profiles {:dev {:plugins [[lein-figwheel "0.5.9"]]
-                   :dependencies [[binaryage/dirac "1.2.0"]
+                   :dependencies [[binaryage/dirac "1.2.1"]
                                   [binaryage/devtools "0.9.2"]
-                                  [re-frisk "0.3.2"]]
+                                  [re-frisk "0.4.4"]]
                    :repl-options {:port 8230
                                   :nrepl-middleware [dirac.nrepl/middleware]
                                   :init (do
@@ -64,6 +64,7 @@
                     "garden" "once" "min,"
                     "cljsbuild" "once" "min,"
                     "shell" "./release.sh"]
+            "versions" ["ancient" "upgrade" ":all" ":check-clojure" ":allow-all"]
             "reload" ["pdo"
                       "garden" "auto" "dev,"
                       "figwheel" "dev,"]})
