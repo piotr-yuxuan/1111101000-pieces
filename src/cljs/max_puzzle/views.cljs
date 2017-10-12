@@ -1,5 +1,6 @@
 (ns max-puzzle.views
   (:require [re-frame.core :refer [dispatch subscribe reg-event-ctx]]
+            [clojure.math.combinatorics :refer [cartesian-product]]
             [reagent.core :as reagent]
             [clojure.string :as str]))
 
@@ -39,11 +40,45 @@
     ;; makes obvious it returns nil
     nil))
 
+(defn- partition-number
+  [part-number unit]
+  (let [partition (/ unit part-number)]
+    (loop [result ()
+           current part-number]
+      (if (neg-int? current)
+        result
+        (recur (conj result (double (* current partition))) (dec current))))))
+
+(defn- path
+  [[x0 y0] [x1 y1]]
+  (str (str x0 "%") " " (str y0 "%") ", "
+       (str x0 "%") " " (str y1 "%") ", "
+       (str x1 "%") " " (str y1 "%") ", "
+       (str x1 "%") " " (str y0 "%")))
+
+(defn- average
+  [& args]
+  (double (/ (reduce + args) (count args))))
+
+(defn- centre
+  [[x0 y0] [x1 y1]]
+  (str/join " " [(str (average x0 x1) "%")
+                 (str (average y0 y1) "%")]))
+
+(defn pieces-cutter
+  [step]
+  (->> (partition-number step 100)
+       (partition 2 1)
+       (#(cartesian-product % %))
+       (reduce (fn [acc [[x0 x1] [y0 y1] :as i]]
+                 (let [path (path [x0 y0] [x1 y1])
+                       centre (centre [x0 y0] [x1 y1])]
+                   (conj acc {:centre (str centre)
+                              :path (str path)})))
+               ())))
+
 (def pieces
-  [{:path "  0%   0%,   0%  50%,  50%  50%,  50%   0%" :centre "25% 25%"}
-   {:path " 50%   0%,  50%  50%, 100%  50%, 100%   0%" :centre "75% 25%"}
-   {:path "  0%  50%,   0% 100%,  50% 100%,  50%  50%" :centre "25% 75%"}
-   {:path " 50%  50%,  50% 100%, 100% 100%, 100%  50%" :centre "75% 75%"}])
+  (pieces-cutter 2))
 
 (defn main-panel []
   (reagent/create-class
