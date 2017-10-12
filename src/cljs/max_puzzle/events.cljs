@@ -33,3 +33,12 @@
   :reset-transforms
   (fn [db _]
     (dissoc db :transforms)))
+
+(re-frame/reg-event-db
+  :current-top
+  (fn [db [_ id]]
+    (update-in db
+               [:z-index]
+               (fn [indices id]
+                 (assoc indices id (inc (apply max (vals indices)))))
+               id)))

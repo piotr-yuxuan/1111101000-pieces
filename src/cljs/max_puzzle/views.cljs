@@ -1,6 +1,7 @@
 (ns max-puzzle.views
   (:require [re-frame.core :refer [dispatch subscribe reg-event-ctx]]
-            [reagent.core :as reagent]))
+            [reagent.core :as reagent]
+            [clojure.string :as str]))
 
 (defn- controlled-fragment
   [{:keys [path centre]}]
@@ -8,9 +9,10 @@
                    ;; disable html5 drag and drop
                    :draggable false
                    ;;:src "img/bb4.jpg"
-                   :src "img/monet.jpg"
+                   :src "img/titien.jpg"
                    :style {:max-width "100%"
                            :max-height "100%"
+                           :z-index @(subscribe [:z-index centre])
                            :clip-path (str "polygon(" path ")")
                            :-webkit-transform-origin centre
                            :transform @(subscribe [:css-transform centre])}}])
@@ -28,9 +30,10 @@
                                   (.removeEventListener el "mousemove" introspection))]
     (doto el
       (.addEventListener "mousedown" #(do
-                                       (.addEventListener el "mouseup" turn-fn)
-                                       (.addEventListener el "mousemove" track-fn)
-                                       (.addEventListener el "mousemove" dont-turn-when-moved-fn)))
+                                        (dispatch [:current-top id])
+                                        (.addEventListener el "mouseup" turn-fn)
+                                        (.addEventListener el "mousemove" track-fn)
+                                        (.addEventListener el "mousemove" dont-turn-when-moved-fn)))
       (.addEventListener "mouseup" stop-fn)
       (.addEventListener "mouseout" stop-fn))
     ;; makes obvious it returns nil

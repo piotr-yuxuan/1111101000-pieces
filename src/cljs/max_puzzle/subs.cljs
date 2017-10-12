@@ -24,3 +24,8 @@
       (str "translateX(" translateX "px) "
            "translateY(" translateY "px) "
            "rotate(" (* -1 (* 45 rotate)) "deg)"))))
+
+(re-frame/reg-sub
+  :z-index
+  (fn [db [_ id]]
+    (get-in db [:z-index id])))

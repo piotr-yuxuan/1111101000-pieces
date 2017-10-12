@@ -3,6 +3,7 @@
                  [org.clojure/clojurescript "1.9.495"]
                  [reagent "0.6.1"]
                  [re-frame "0.9.2"]
+                 [org.clojure/math.combinatorics "0.1.4"]
                  [garden "1.3.2"]]
   :license {:name "GNU GPL v3+"
             :url "http://www.gnu.org/licenses/gpl-3.0.en.html"}
