@@ -78,7 +78,7 @@
                ())))
 
 (def pieces
-  (pieces-cutter 2))
+  (pieces-cutter 5))
 
 (defn main-panel []
   (reagent/create-class
